@@ -1,4 +1,3 @@
-"""
 #!/bin/bash
 #SBATCH --job-name=eval_gnn
 #SBATCH --output=outputs/logs/eval_%j.out
@@ -10,11 +9,11 @@
 #SBATCH --partition=gpu
 
 # Load modules
-module load python/3.10
+module load anaconda3/2024.06
 module load cuda/11.8
 
 # Activate environment
-source ~/venvs/lightsout/bin/activate
+source activate lightsout
 
 # Create directories
 mkdir -p outputs/logs outputs/results
@@ -29,4 +28,3 @@ python scripts/03_evaluate_model.py \\
 
 echo "Evaluation complete"
 date
-"""

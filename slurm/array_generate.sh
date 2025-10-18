@@ -1,4 +1,3 @@
-"""
 #!/bin/bash
 #SBATCH --job-name=gen_array
 #SBATCH --output=outputs/logs/gen_d%a_%j.out
@@ -12,8 +11,8 @@
 # Parallel data generation - one distance per job
 # %3 means max 3 jobs running simultaneously
 
-module load python/3.10
-source ~/venvs/lightsout/bin/activate
+module load anaconda3/2024.06
+source activate lightsout
 
 DISTANCE=$SLURM_ARRAY_TASK_ID
 
@@ -27,4 +26,3 @@ python scripts/01_generate_data.py \\
 
 echo \"Complete for d=${DISTANCE}\"
 date
-"""

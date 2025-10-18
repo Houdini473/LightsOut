@@ -1,4 +1,3 @@
-"""
 #!/bin/bash
 #SBATCH --job-name=train_gnn
 #SBATCH --output=outputs/logs/train_%j.out
@@ -10,11 +9,11 @@
 #SBATCH --partition=gpu
 
 # Load modules
-module load python/3.10
+module load anaconda3/2024.06
 module load cuda/11.8
 
 # Activate environment
-source ~/venvs/lightsout/bin/activate
+source activate lightsout
 
 # Create directories
 mkdir -p outputs/logs outputs/models
@@ -28,4 +27,3 @@ python scripts/02_train_model.py \\
 
 echo "Training complete"
 date
-"""

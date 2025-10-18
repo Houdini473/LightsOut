@@ -1,4 +1,3 @@
-"""
 #!/bin/bash
 #SBATCH --job-name=gen_data
 #SBATCH --output=outputs/logs/gen_%j.out
@@ -8,11 +7,11 @@
 #SBATCH --mem=64G
 #SBATCH --partition=compute
 
-# Load modules (adjust for your cluster)
-module load python/3.10
+# Load modules 
+module load anaconda3/2024.06
 
 # Activate virtual environment
-source ~/venvs/lightsout/bin/activate
+source activate lightsout
 
 # Create log directory
 mkdir -p outputs/logs
@@ -25,4 +24,3 @@ python scripts/01_generate_data.py \\
 
 echo "Data generation complete"
 date
-"""
