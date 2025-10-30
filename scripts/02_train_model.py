@@ -11,13 +11,14 @@ import sys
 from pathlib import Path
 import torch
 from torch_geometric.loader import DataLoader
+from torch_geometric.data import Data, Dataset
 
 sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 from models import ColorCodeGNN
 from train import train_model
-from utils import load_config, load_pickle, save_json
-
+from utils import load_config, load_pickle, save_json, load_pickles
+from datasets import MultiDistanceDataset
 
 def main():
     parser = argparse.ArgumentParser(description='Train GNN decoder')
@@ -33,6 +34,8 @@ def main():
     # Load config
     config = load_config(args.config)
 
+    print(f'cuda avail: {torch.cuda.is_available()}')
+
     # Setup device
     if args.device == 'cuda' and not torch.cuda.is_available():
         print("CUDA not available, falling back to CPU")
@@ -47,7 +50,7 @@ def main():
     data_dir = Path(args.data_dir)
     print("Loading datasets...")
 
-    class SimpleDataset:
+    class SimpleDataset(Dataset):
         def __init__(self, data_list):
             self.data_list = data_list
         def __len__(self):
@@ -55,11 +58,18 @@ def main():
         def __getitem__(self, idx):
             return self.data_list[idx]
 
-    train_data = load_pickle(data_dir / 'train.pkl')
-    val_data = load_pickle(data_dir / 'val.pkl')
+    train_data_list = load_pickles(data_dir / "train")
+    print(f"Train data w length = {len(train_data_list)} loaded")
+    train_data = MultiDistanceDataset(distances = [], n_samples_per_distance =1, data_list = train_data_list)
 
-    train_dataset = SimpleDataset(train_data['data_list'] if isinstance(train_data, dict) else train_data.data_list)
-    val_dataset = SimpleDataset(val_data['data_list'] if isinstance(val_data, dict) else val_data.data_list)
+    val_data = load_pickle(data_dir / 'val.pkl')
+    print(f"Validation data w length = {len(val_data)} loaded")
+
+    # train_dataset = SimpleDataset(train_data['data_list'] if isinstance(train_data, dict) else train_data.data_list)
+    # val_dataset = SimpleDataset(val_data['data_list'] if isinstance(val_data, dict) else val_data.data_list)
+
+    train_dataset = SimpleDataset(train_data)
+    val_dataset = SimpleDataset(val_data)
 
     print(f"Train: {len(train_dataset)}, Val: {len(val_dataset)}\n")
 
@@ -114,7 +124,7 @@ def main():
         device=device,
         save_path=model_path,
         max_patience=train_config['patience'],
-        log_interval=10
+        log_interval=1
     )
 
     # Save history

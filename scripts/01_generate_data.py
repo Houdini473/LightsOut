@@ -47,12 +47,13 @@ def main():
             error_rate=data_config['error_rate'],
             seed=data_config['train_seed'],
             use_fast_decoder=data_config['use_fast_decoder'],
-            verbose=True
+            verbose=True,
+            output_path=output_dir / f'train'
         )
 
-        train_path = output_dir / 'train.pkl'
-        save_pickle(train_dataset, train_path)
-        print(f"\n✓ Saved {len(train_dataset)} training samples to {train_path}")
+        # train_path = output_dir / 'train.pkl'
+        # save_pickle(train_dataset, train_path)
+        # print(f"\n✓ Saved {len(train_dataset)} training samples to {train_path}")
 
     # Generate validation data
     if args.split in ['val', 'both']:
@@ -60,18 +61,21 @@ def main():
         print("GENERATING VALIDATION DATA")
         print("="*70)
 
+        distances = data_config['distances']
+
         val_dataset = MultiDistanceDataset(
             distances=data_config['distances'],
             n_samples_per_distance=data_config['val_samples_per_distance'],
             error_rate=data_config['error_rate'],
             seed=data_config['val_seed'],
             use_fast_decoder=data_config['use_fast_decoder'],
-            verbose=True
+            verbose=True,
+            output_path=output_dir / f'val'
         )
 
-        val_path = output_dir / 'val.pkl'
-        save_pickle(val_dataset, val_path)
-        print(f"\n✓ Saved {len(val_dataset)} validation samples to {val_path}")
+        # val_path = output_dir / 'val.pkl'
+        # save_pickle(val_dataset, val_path)
+        # print(f"\n✓ Saved {len(val_dataset)} validation samples to {val_path}")
 
 
 if __name__ == '__main__':

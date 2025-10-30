@@ -1,12 +1,11 @@
-"""
 data:
-  distances: [3, 7, 11, 15, 21]
-  train_samples_per_distance: 200
-  val_samples_per_distance: 50
+  distances: [3, 5, 7, 11, 15, 21, 29, 35]
+  train_samples_per_distance: 5000
+  val_samples_per_distance: 500
   error_rate: 0.1
   train_seed: 42
   val_seed: 123
-  use_fast_decoder: true  # Required for large distances
+  use_fast_decoder: false  
 
 model:
   input_dim: 4
@@ -19,4 +18,3 @@ training:
   batch_size: 16
   lr: 0.001
   patience: 30
-"""

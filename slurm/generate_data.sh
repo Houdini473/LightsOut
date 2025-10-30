@@ -2,10 +2,10 @@
 #SBATCH --job-name=gen_data
 #SBATCH --output=outputs/logs/gen_%j.out
 #SBATCH --error=outputs/logs/gen_%j.err
-#SBATCH --time=48:00:00
+#SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
-#SBATCH --partition=compute
+#SBATCH --partition=short
 
 # Load modules 
 module load anaconda3/2024.06
@@ -17,10 +17,10 @@ source activate lightsout
 mkdir -p outputs/logs
 
 # Generate data
-python scripts/01_generate_data.py \\
-    --config configs/small.yaml \\
-    --split both \\
-    --output_dir outputs/data
+python scripts/01_generate_data.py \
+ --config configs/large.yaml \
+ --split both \
+ --output_dir outputs/data
 
 echo "Data generation complete"
 date

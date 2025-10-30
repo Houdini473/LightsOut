@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 from models import ColorCodeGNN
 from evaluate import evaluate_single_distance
 from utils import load_config, save_json
+import numpy as np
 
 
 def main():

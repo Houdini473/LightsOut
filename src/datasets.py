@@ -5,35 +5,38 @@ from tqdm import tqdm
 from mqt.qecc.codes import HexagonalColorCode
 from mqt.qecc.cc_decoder.decoder import LightsOut
 from mqt.qecc import UFHeuristic, Code
+from utils import save_pickle
 
 
 class MultiDistanceDataset(Dataset):
     """Dataset with samples from multiple code distances"""
 
-    def __init__(self, distances, n_samples_per_distance, error_rate=0.1,
-                 seed=42, use_fast_decoder=False, verbose=True):
+    def __init__(self, distances, n_samples_per_distance, data_list = [], error_rate=0.1,
+                 seed=42, use_fast_decoder=False, verbose=True, output_path="/output"):
         super().__init__()
 
         np.random.seed(seed)
-        self.data_list = []
+        self.data_list = data_list
         self.distances = distances
         self.verbose = verbose
+        self.output_path=output_path
 
-        if self.verbose:
-            print(f"Generating data for distances: {distances}")
-            print(f"Samples per distance: {n_samples_per_distance}")
-            print(f"Error rate: {error_rate}")
-            print(f"Fast decoder: {use_fast_decoder}\n")
-
-        for distance in distances:
-            self._generate_distance(distance, n_samples_per_distance,
-                                   error_rate, use_fast_decoder)
+        #if no data provided then generate new data and save it
+        if len(data_list) == 0:
+            if self.verbose:
+                print(f"Generating data for distances: {distances}")
+                print(f"Samples per distance: {n_samples_per_distance}")
+                print(f"Error rate: {error_rate}")
+                print(f"Fast decoder: {use_fast_decoder}\n")
+            for distance in distances:
+                self._generate_distance(distance, n_samples_per_distance,
+                                    error_rate, use_fast_decoder)
 
         if self.verbose:
             print(f"\nTotal samples: {len(self.data_list)}")
 
     def _generate_distance(self, distance, n_samples, error_rate, use_fast_decoder):
-        """Generate samples for a single distance"""
+        """Generate and samples for a single distance"""
         if self.verbose:
             print(f"{'='*60}")
             print(f"Distance {distance}")
@@ -48,7 +51,7 @@ class MultiDistanceDataset(Dataset):
         if use_fast_decoder:
             decoder = UFHeuristic()
             decoder.set_code(Code(code.H.tolist(), code.H.tolist()))
-            decode_fn = lambda s: np.array(decoder.result.estimate, dtype=int)
+            decode_fn = lambda syndrome: np.array(decoder.result.estimate, dtype=int)
         else:
             decoder = LightsOut(code.faces_to_qubits, code.qubits_to_faces)
             decoder.preconstruct_z3_instance()
@@ -106,7 +109,8 @@ class MultiDistanceDataset(Dataset):
                 continue
 
         pbar.close()
-
+        save_pickle(self, self.output_path / f'distance{distance}')
+        self.data_list = []
         if self.verbose:
             print(f"  Generated {samples_generated}/{n_samples} samples")
 

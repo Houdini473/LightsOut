@@ -3,6 +3,7 @@ import torch.nn as nn
 from pathlib import Path
 
 
+
 def train_epoch(model, loader, optimizer, criterion, device):
     model.train()
     total_loss = 0
@@ -44,7 +45,7 @@ def train_model(model, train_loader, val_loader, epochs, lr, device,
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=10, verbose=True
+        optimizer, mode='min', factor=0.5, patience=10    #, verbose=True
     )
     criterion = nn.BCEWithLogitsLoss()
 
@@ -60,6 +61,9 @@ def train_model(model, train_loader, val_loader, epochs, lr, device,
         history['val_loss'].append(val_loss)
 
         scheduler.step(val_loss)
+
+        last_learning_rate = scheduler.get_last_lr()[0]
+        print(f"Current LR: {last_learning_rate:.6f}")
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
