@@ -1,0 +1,21 @@
+output_dir: outputs
+seed: 42
+num_workers: 4
+
+model:
+  in_channels: 3
+  hidden_channels: 128
+  num_layers: 4
+
+rl:
+  distances: [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25] # Start with distances you trained on
+  # n_samples_per_distance: 5000
+  samples_per_epoch: 3000
+  success_threshold: 0.70 # gauge for when to add in larger distance 
+  error_rate: 0.05 # Below threshold for better signal
+  batch_size: 32
+  num_epochs: 1000
+  learning_rate: 1.0e-4 # Lower than supervised (1e-4)
+  max_shots: 10
+  gamma: 0.99 # Discount factor
+  log_interval: 1
