@@ -2,7 +2,7 @@
 #SBATCH --job-name=eval_gnn
 #SBATCH --output=outputs/logs/eval_%j.out
 #SBATCH --error=outputs/logs/eval_%j.err
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:1
 #SBATCH --mem=32G
@@ -18,11 +18,11 @@ source activate lightsout
 mkdir -p outputs/logs outputs/results
 
 # Evaluate on multiple distances (including extrapolation)
-python scripts/03_evaluate_model.py \
+python scripts/04_evaluate_model.py \
     --model outputs/models/best_model.pt \
     --config configs/large.yaml \
-    --test_distances 3 5 7 9 11 13 21\
-    --test_samples 100 \
+    --test_distances 3 5 7 9 11 13 15 17 19 21\
+    --test_samples 200 \
     --device cuda
 
 echo "Evaluation complete"

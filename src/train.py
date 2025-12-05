@@ -7,35 +7,47 @@ from pathlib import Path
 def train_epoch(model, loader, optimizer, criterion, device):
     model.train()
     total_loss = 0
+    total_samples = 0
 
     for data in loader:
         data = data.to(device)
         optimizer.zero_grad()
 
+        batch_size = data.y.size(0)
+        #print(f"Train batch size = {batch_size}")
+
         out = model(data)
         loss = criterion(out, data.y)
+        # total_loss += loss.item()
+        total_loss += loss.item() * batch_size
+        total_samples += batch_size
 
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
 
-        total_loss += loss.item()
-
-    return total_loss / len(loader)
+    return total_loss / total_samples
 
 
 def validate(model, loader, criterion, device):
     model.eval()
     total_loss = 0
+    total_samples = 0
 
     with torch.no_grad():
         for data in loader:
             data = data.to(device)
+
+            batch_size = data.y.size(0)
+            # print(f"Validate batch size = {batch_size}")
+
             out = model(data)
             loss = criterion(out, data.y)
-            total_loss += loss.item()
+            # total_loss += loss.item()
+            total_loss += loss.item() * batch_size
+            total_samples += batch_size
 
-    return total_loss / len(loader)
+    return total_loss / total_samples
 
 
 def train_model(model, train_loader, val_loader, epochs, lr, device,

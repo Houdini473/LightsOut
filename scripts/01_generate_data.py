@@ -3,8 +3,8 @@
 Generate training/validation datasets
 
 Usage:
-    python scripts/01_generate_data.py --config configs/small.yaml --split train
-    python scripts/01_generate_data.py --config configs/small.yaml --split val
+    python scripts/01_generate_data.py --config configs/large.yaml --split train
+    python scripts/01_generate_data.py --config configs/large.yaml --split val
 """
 
 import argparse

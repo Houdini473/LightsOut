@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 from torch_geometric.data import Data, Dataset
-from tqdm import tqdm
 from mqt.qecc.codes import HexagonalColorCode
 from mqt.qecc.cc_decoder.decoder import LightsOut
 from mqt.qecc import UFHeuristic, Code
@@ -19,7 +18,7 @@ class MultiDistanceDataset(Dataset):
         self.data_list = data_list
         self.distances = distances
         self.verbose = verbose
-        self.output_path=output_path
+        self.output_path = output_path
 
         #if no data provided then generate new data and save it
         if len(data_list) == 0:
@@ -67,8 +66,6 @@ class MultiDistanceDataset(Dataset):
         attempts = 0
         max_attempts = n_samples * 3
 
-        pbar = tqdm(total=n_samples, desc=f"d={distance}", disable=not self.verbose)
-
         while samples_generated < n_samples and attempts < max_attempts:
             attempts += 1
 
@@ -101,14 +98,13 @@ class MultiDistanceDataset(Dataset):
 
                 self.data_list.append(data)
                 samples_generated += 1
-                pbar.update(1)
 
             except Exception as e:
                 if attempts % 100 == 0 and self.verbose:
                     print(f"    Attempts: {attempts}, Generated: {samples_generated}")
                 continue
 
-        pbar.close()
+        # pbar.close()
         save_pickle(self, self.output_path / f'distance{distance}')
         self.data_list = []
         if self.verbose:
@@ -129,13 +125,13 @@ class MultiDistanceDataset(Dataset):
 
     def _create_node_features(self, syndrome, code):
         """Create 4D feature vector per qubit"""
-        features = []
+        features = [] # [face_1, face_2, face_3, degree ]
         for qubit_idx in range(code.n):
-            faces = code.qubits_to_faces.get(qubit_idx, [])
-            syn_vals = [syndrome[f] for f in faces]
-            syn_vals += [0] * (3 - len(syn_vals))
-            degree_norm = len(faces) / 3.0
-            feat = syn_vals[:3] + [degree_norm]
+            faces = code.qubits_to_faces.get(qubit_idx, []) # get adjacent faces (1, 2, or 3 depending on position of this node)
+            syn_vals = [syndrome[f] for f in faces]  # grab the state of each adjacent face 
+            syn_vals += [0] * (3 - len(syn_vals)) # pad the syndromes to length 3
+            degree_norm = len(faces) / 3.0 # normalized degree (tells you if it's a bulk, boundary, or corner)
+            feat = syn_vals[:3] + [degree_norm] # combine them all together 
             features.append(feat)
         return np.array(features, dtype=np.float32)
 

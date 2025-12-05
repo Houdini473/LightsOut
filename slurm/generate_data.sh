@@ -2,7 +2,7 @@
 #SBATCH --job-name=gen_data
 #SBATCH --output=outputs/logs/gen_%j.out
 #SBATCH --error=outputs/logs/gen_%j.err
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
 #SBATCH --partition=short
@@ -17,9 +17,9 @@ source activate lightsout
 mkdir -p outputs/logs
 
 # Generate data
-python scripts/01_generate_data.py \
+python -u scripts/01_generate_data.py \
  --config configs/large.yaml \
- --split both \
+ --split train \
  --output_dir outputs/data
 
 echo "Data generation complete"

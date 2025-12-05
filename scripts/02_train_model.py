@@ -62,8 +62,10 @@ def main():
     print(f"Train data w length = {len(train_data_list)} loaded")
     train_data = MultiDistanceDataset(distances = [], n_samples_per_distance =1, data_list = train_data_list)
 
-    val_data = load_pickle(data_dir / 'val.pkl')
-    print(f"Validation data w length = {len(val_data)} loaded")
+    #val_data = load_pickle(data_dir / 'val.pkl')
+    val_data_list = load_pickles(data_dir / "val")
+    print(f"Validation data w length = {len(val_data_list)} loaded")
+    val_data = MultiDistanceDataset(distances = [], n_samples_per_distance = 1, data_list = val_data_list)
 
     # train_dataset = SimpleDataset(train_data['data_list'] if isinstance(train_data, dict) else train_data.data_list)
     # val_dataset = SimpleDataset(val_data['data_list'] if isinstance(val_data, dict) else val_data.data_list)

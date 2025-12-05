@@ -14,9 +14,6 @@ module load anaconda3/2024.06 cuda/12.8.0
 # Activate environment
 source activate lightsout
 
-# Create directories
-mkdir -p outputs/logs outputs/models
-
 echo "Starting training"
 # Run training
 python -u scripts/02_train_model.py \

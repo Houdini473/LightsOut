@@ -1,6 +1,6 @@
 data:
-  distances: [3, 5, 7, 11, 15, 21, 29, 35]
-  train_samples_per_distance: 5000
+  distances: [3, 5, 7, 11, 15, 21]
+  train_samples_per_distance: 30000
   val_samples_per_distance: 500
   error_rate: 0.1
   train_seed: 42
@@ -10,11 +10,11 @@ data:
 model:
   input_dim: 4
   hidden_dim: 256
-  num_layers: 32
-  dropout: 0.3
+  num_layers: 21 #32
+  dropout: 0.2
 
 training:
-  epochs: 300
+  epochs: 400
   batch_size: 16
   lr: 0.001
-  patience: 30
+  patience: 300
