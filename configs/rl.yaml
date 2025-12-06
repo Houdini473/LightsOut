@@ -10,7 +10,7 @@ model:
 rl:
   distances: [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25] # Start with distances you trained on
   # n_samples_per_distance: 5000
-  samples_per_epoch: 3000
+  samples_per_epoch: 4000
   success_threshold: 0.70 # gauge for when to add in larger distance 
   error_rate: 0.05 # Below threshold for better signal
   batch_size: 32

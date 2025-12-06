@@ -575,7 +575,7 @@ class RLColorCodeTrainer:
                 self.logger.info(f"Epoch {epoch+1}/{num_epochs}")
                 self.logger.info(f"  Avg Reward: {avg_reward:.3f}")
                 self.logger.info(f"  Avg Shots: {avg_shots:.2f}")
-                self.logger.info(f"  Success Rate: {success_rate:.3f}, {[round(history['distance_success'][d][-1], 3) for d in distances]}")
+                self.logger.info(f"  Success Rate: {success_rate:.3f}, {[history['distance_success'][d][-1] for d in distances]}")
                 self.logger.info(f"  Active Distances: {self.current_distances}")
 
 
