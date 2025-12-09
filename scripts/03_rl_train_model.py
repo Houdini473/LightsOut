@@ -29,7 +29,7 @@ def setup_logging(log_dir: Path):
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(log_dir / f"rl_training_{round(time())}.log"),
-            logging.StreamHandler(),
+            # logging.StreamHandler(sys.stdout),
         ],
     )
 
@@ -206,7 +206,11 @@ def main(args):
         max_shots=config["rl"]["max_shots"],
         learning_rate=config["rl"]["learning_rate"],
         gamma=config["rl"]["gamma"],
-        success_threshold=config['rl']['success_threshold']
+        success_threshold=config['rl']['success_threshold'],
+        initial_error_rate=config['rl']['initial_error_rate'],
+        max_error_rate=config['rl']['max_error_rate'],
+        error_rate_step=config['rl']['error_rate_step'],
+        # distance_window_size=config['rl']['distance_window_size']
     )
 
     # Train
@@ -215,7 +219,6 @@ def main(args):
     save_path.parent.mkdir(parents=True, exist_ok=True)
 
     history = rl_trainer.train(
-        distances=config['rl']['distances'],
         error_rate=config['rl']['error_rate'],
         samples_per_epoch=config['rl']['samples_per_epoch'],
         num_epochs=config["rl"]["num_epochs"],
